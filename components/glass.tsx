@@ -8,7 +8,7 @@ export function Glass({ schedule, isActive, onClick }: GlassProps) {
     <div className="flex flex-col items-center gap-3">
       <button
         onClick={onClick}
-        className="relative w-20 h-24 cursor-pointer group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        className="relative w-20 h-24 cursor-pointer group"
         aria-label={`${schedule.amount}ml water glass for ${schedule.time}`}
       >
         {/* Main glass container */}

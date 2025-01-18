@@ -24,22 +24,24 @@ export default function WaterTracker() {
 
   useEffect(() => {
     const savedState = localStorage.getItem('waterTracker')
-    if (savedState) {
+    const lastResetDate = localStorage.getItem('lastResetDate')
+    const todayDate = new Date().toDateString()
+
+    if (savedState && lastResetDate === todayDate) {
       setActiveGlasses(JSON.parse(savedState))
     } else {
-      setActiveGlasses(new Array(SCHEDULE.length).fill(false))
+      resetGlasses()
     }
 
     const now = new Date()
     const tomorrow = new Date(now)
     tomorrow.setDate(tomorrow.getDate() + 1)
     tomorrow.setHours(0, 0, 0, 0)
-    
+
     const timeUntilMidnight = tomorrow.getTime() - now.getTime()
-    
+
     const resetTimer = setTimeout(() => {
-      setActiveGlasses(new Array(SCHEDULE.length).fill(false))
-      localStorage.setItem('waterTracker', JSON.stringify(new Array(SCHEDULE.length).fill(false)))
+      resetGlasses()
     }, timeUntilMidnight)
 
     return () => clearTimeout(resetTimer)
@@ -50,11 +52,14 @@ export default function WaterTracker() {
     newActiveGlasses[index] = !newActiveGlasses[index]
     setActiveGlasses(newActiveGlasses)
     localStorage.setItem('waterTracker', JSON.stringify(newActiveGlasses))
+    localStorage.setItem('lastResetDate', new Date().toDateString())
   }
 
   const resetGlasses = () => {
-    setActiveGlasses(new Array(SCHEDULE.length).fill(false))
-    localStorage.setItem('waterTracker', JSON.stringify(new Array(SCHEDULE.length).fill(false)))
+    const resetState = new Array(SCHEDULE.length).fill(false)
+    setActiveGlasses(resetState)
+    localStorage.setItem('waterTracker', JSON.stringify(resetState))
+    localStorage.setItem('lastResetDate', new Date().toDateString())
   }
 
   return (
@@ -91,4 +96,3 @@ export default function WaterTracker() {
     </main>
   )
 }
-
